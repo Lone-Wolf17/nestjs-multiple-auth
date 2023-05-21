@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from './entities/user.entity';
+import { UserDetails } from 'src/auth/utils/types';
 
 @Injectable()
 export class UsersService {
@@ -28,18 +29,22 @@ export class UsersService {
 
   findByEmail(email: string): Promise<User | undefined> {
     const user = this.users.find((user) => user.email === email);
-    if (!user) {
-        throw new NotFoundException(`No user found for email: ${email}`);
-    }
     return Promise.resolve(user);
   }
 
   findOne(id: number): Promise<User | undefined> {
     const user = this.users.find((user) => user.id === id);
-    if (!user) {
-        throw new NotFoundException(`No user found with ID: ${id}`);
-    }
-
     return Promise.resolve(user);
+  }
+
+  createUser(details: UserDetails) {
+    const newUser: User = {
+      id: this.users.length,
+      email: details.email,
+      name: details.name,
+      password: details.name.split(' ')[0].toLowerCase() + 'Pass',
+    };
+    this.users.push(newUser);
+    return newUser;
   }
 }

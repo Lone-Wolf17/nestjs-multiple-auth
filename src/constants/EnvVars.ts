@@ -1,9 +1,9 @@
-const dotenv = require('dotenv');
-const dotenExpand = require('dotenv-expand');
+const dotenv = require('dotenv').config({ override: true });
+const dotenvExpand = require('dotenv-expand');
 
-const env = dotenv.config();
-dotenExpand.expand(env);
-// console.log("Details:: ", env)
+
+dotenvExpand.expand(dotenv);
+// console.log('Details:: ', dotenv);
 /**
  * Environments variables declared here.
  */
@@ -12,7 +12,7 @@ dotenExpand.expand(env);
 
 export default {
   NodeEnv: process.env.NODE_ENV ?? '',
-  Port: parseInt(process.env.PORT ?? "4001"),
+  Port: parseInt(process.env.PORT ?? '4001'),
   DatabaseUrl: process.env.DATABASE_URL ?? '',
   GoogleClientID: process.env.GOOGLE_CLIENT_ID ?? '',
   GoogleClientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',

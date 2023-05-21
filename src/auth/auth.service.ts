@@ -6,6 +6,7 @@ import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entities/user.entity';
 import { DecodedAccessToken, AuthTokens, UserAgentAndIpAddress } from './entities/misc';
 import EnvVars from 'src/constants/EnvVars';
+import { UserDetails } from './utils/types';
 
 @Injectable()
 export class AuthService {
@@ -43,6 +44,15 @@ export class AuthService {
     );
   }
 
+  async validateUser(details: UserDetails) {
+    const user = await this.userService.findByEmail(details.email);
+    if (user) {
+      return user;
+    }
+    console.log('User not found. Creating...');
+    return this.userService.createUser(details);
+  };
+
   private newRefreshAndAccessToken(
     user: User,
     values: UserAgentAndIpAddress,
@@ -70,7 +80,7 @@ export class AuthService {
     });
   }
 
-  async refresh(refreshStr: string): Promise<{access_token: string}> {
+  async refresh(refreshStr: string): Promise<{ access_token: string }> {
     const refreshToken = await this.retrieveRefreshToken(refreshStr);
     if (!refreshToken) {
       throw new UnauthorizedException(`Invalid Token`);
@@ -81,7 +91,7 @@ export class AuthService {
       throw new UnauthorizedException(`User not found`);
     }
 
-    const accessToken : DecodedAccessToken = {
+    const accessToken: DecodedAccessToken = {
       userId: refreshToken.userId,
     };
 

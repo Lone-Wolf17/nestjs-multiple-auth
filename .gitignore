@@ -1,5 +1,6 @@
 # Project Specific
 .env
+config/firebase-adminsdk.json
 
 # compiled output
 /dist
@@ -36,3 +37,4 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+

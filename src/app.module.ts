@@ -14,7 +14,7 @@ import * as winston from 'winston';
   imports: [
     UsersModule,
     AuthModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true, expandVariables: true }),
     WinstonModule.forRoot({
       transports: [
         new winston.transports.Console({

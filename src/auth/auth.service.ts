@@ -4,7 +4,8 @@ import { sign, verify } from 'jsonwebtoken';
 import DecodedRefreshToken from './entities/refresh_token.entity';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entities/user.entity';
-import { DecodedAccessToken, Tokens, UserAgentAndIpAddress } from './entities/misc';
+import { DecodedAccessToken, AuthTokens, UserAgentAndIpAddress } from './entities/misc';
+import EnvVars from 'src/constants/EnvVars';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
     email: string,
     password: string,
     values: UserAgentAndIpAddress,
-  ): Promise<Tokens | undefined> {
+  ): Promise<AuthTokens> {
     const user = await this.userService.findByEmail(email);
     if (!user) {
       throw new NotFoundException(`No user found for email: ${email}`);
@@ -45,7 +46,7 @@ export class AuthService {
   private newRefreshAndAccessToken(
     user: User,
     values: UserAgentAndIpAddress,
-  ): Promise<Tokens> {
+  ): Promise<AuthTokens> {
     const refreshObject = new DecodedRefreshToken({
       id:
         this.refreshTokens.length === 0
@@ -63,13 +64,13 @@ export class AuthService {
         {
           userId: user.id,
         },
-        process.env.ACCESS_SECRET,
+        EnvVars.AccessSecret,
         { expiresIn: '1h' },
       ),
     });
   }
 
-  async refresh(refreshStr: string): Promise<{access_token: string} | undefined> {
+  async refresh(refreshStr: string): Promise<{access_token: string}> {
     const refreshToken = await this.retrieveRefreshToken(refreshStr);
     if (!refreshToken) {
       throw new UnauthorizedException(`Invalid Token`);
@@ -85,7 +86,7 @@ export class AuthService {
     };
 
     return {
-      access_token: sign(accessToken, process.env.ACCESS_SECRET, {
+      access_token: sign(accessToken, EnvVars.AccessSecret, {
         expiresIn: '1h',
       }),
     };
@@ -93,9 +94,9 @@ export class AuthService {
 
   private retrieveRefreshToken(
     refreshTokenStr: string,
-  ): Promise<DecodedRefreshToken | undefined> {
+  ): Promise<DecodedRefreshToken> {
     try {
-      const decoded = verify(refreshTokenStr, process.env.REFRESH_SECRET);
+      const decoded = verify(refreshTokenStr, EnvVars.RefreshSecret);
 
       if (typeof decoded === 'string') {
         throw new UnauthorizedException(`Invalid Token`);

@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { useRequestLogging } from './middlewares/request_logging.middleware';
 import { ValidationPipe } from '@nestjs/common';
+import EnvVars from './constants/EnvVars';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -13,6 +14,6 @@ async function bootstrap() {
 
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   useRequestLogging(app);
-  await app.listen(4001);
+  await app.listen(EnvVars.Port);
 }
 bootstrap();

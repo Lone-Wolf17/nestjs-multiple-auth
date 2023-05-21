@@ -5,26 +5,26 @@ import { UserDetails } from 'src/auth/utils/types';
 @Injectable()
 export class UsersService {
   private users: User[] = [
-    {
+    new User({
       id: 0,
       name: 'Bob',
       email: 'bob@gmail.com',
       password: 'bobPass',
-    },
+    }),
 
-    {
+    new User({
       id: 1,
       name: 'John',
       email: 'john@gmail.com',
       password: 'johnPass',
-    },
+    }),
 
-    {
+    new User({
       id: 2,
       name: 'Gary',
       email: 'gary@gmail.com',
       password: 'garyPass',
-    },
+    }),
   ];
 
   findByEmail(email: string): Promise<User | undefined> {
@@ -38,12 +38,12 @@ export class UsersService {
   }
 
   createUser(details: UserDetails) {
-    const newUser: User = {
+    const newUser = new User({
       id: this.users.length,
       email: details.email,
       name: details.name,
       password: details.name.split(' ')[0].toLowerCase() + 'Pass',
-    };
+    });
     this.users.push(newUser);
     return newUser;
   }

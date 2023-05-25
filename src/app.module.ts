@@ -4,11 +4,13 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   utilities as nestWinstonModuleUtilities,
   WinstonModule,
 } from 'nest-winston';
 import * as winston from 'winston';
+import EnvVars from './constants/EnvVars';
 
 @Module({
   imports: [
@@ -28,6 +30,12 @@ import * as winston from 'winston';
           ),
         }),
       ],
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: EnvVars.DatabaseUrl,
+      autoLoadEntities: true,
+      synchronize: true,
     }),
   ],
   controllers: [AppController],

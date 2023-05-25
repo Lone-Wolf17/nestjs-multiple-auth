@@ -11,6 +11,6 @@ export class UsersController {
   @Get('/me')
   me (@Req() req: Request) {
     const userId = (req.user as any).userId;
-    return this.usersService.findOne(userId);
+    return this.usersService.findOne({ id: userId });
   }
 }

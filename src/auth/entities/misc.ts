@@ -9,5 +9,5 @@ export type AuthTokens = {
 };
 
 export type DecodedAccessToken = {
-  userId: number;
+  userId: string;
 };

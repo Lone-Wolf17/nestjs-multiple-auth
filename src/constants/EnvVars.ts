@@ -1,5 +1,5 @@
 const dotenv = require('dotenv').config({ override: true });
-const dotenvExpand = require('dotenv-expand');
+import * as dotenvExpand from 'dotenv-expand';
 
 
 dotenvExpand.expand(dotenv);

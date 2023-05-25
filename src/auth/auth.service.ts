@@ -44,6 +44,18 @@ export class AuthService {
     return this.newRefreshAndAccessToken(user, values);
   }
 
+  async socialLogin(
+    email: string,
+    values: UserAgentAndIpAddress,
+  ) {
+    const user = await this.userService.findOne({ email });
+    if (!user) {
+      throw new NotFoundException(`No user found for email: ${email}`);
+    }
+
+    return this.newRefreshAndAccessToken(user, values);
+  };
+
   async logout(refreshStr: string): Promise<void> {
     const refreshToken = await this.retrieveRefreshToken(refreshStr);
 
@@ -119,7 +131,9 @@ export class AuthService {
     };
   }
 
-  private async retrieveRefreshToken(refreshTokenStr: string): Promise<RefreshToken> {
+  private async retrieveRefreshToken(
+    refreshTokenStr: string,
+  ): Promise<RefreshToken> {
     try {
       const decoded = verify(refreshTokenStr, EnvVars.RefreshSecret);
 
@@ -127,7 +141,7 @@ export class AuthService {
         throw new UnauthorizedException(`Invalid Token`);
       }
       // console.log("Decoded:: ", decoded);
-      return await this.refreshTokenRepository.findOneBy({id: decoded.id});
+      return await this.refreshTokenRepository.findOneBy({ id: decoded.id });
     } catch (e) {
       // console.log("Error called:: ", e);
       if (e instanceof UnauthorizedException) {

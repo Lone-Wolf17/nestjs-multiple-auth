@@ -32,12 +32,14 @@ export class AuthController {
 
   @Post('firebase/login')
   @UseGuards(FirebaseAuthGuard)
-  async firebaseLogin(@Req() req: Request) {
-    // console.log('Req:: ', req);
-    return { user: req.user };
+  async firebaseLogin(@Req() req: Request, @Ip() ip: string) {
+    return this.authService.socialLogin((req.user as any).email, {
+      ipAddress: ip,
+      userAgent: req.headers['user-agent'],
+    });
   }
 
-  @Post('refresh') 
+  @Post('refresh')
   async refreshToken(@Body() body: RefreshTokenDto) {
     return this.authService.refresh(body.refresh_token);
   }

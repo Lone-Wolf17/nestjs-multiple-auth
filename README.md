@@ -4,6 +4,9 @@
 
 A Simple Project playing with multiple Auth Strategies in NestJS
 
+# Config
+For the list of required Env Variables. See [EnvVars.ts](src/constants/EnvVars.ts)
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
